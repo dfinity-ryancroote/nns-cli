@@ -103,7 +103,7 @@ fn build_arg(opts: &NeuronListOpts) -> ListNeurons {
         let path = PathBuf::from(expanded_path.to_string());
         let contents = std::fs::read_to_string(path).expect("Failed to read argument file!");
         let mut rows = contents
-            .split("\n")
+            .split('\n')
             .filter_map(|id| id.parse::<u64>().ok())
             .collect::<Vec<_>>();
         arg.neuron_ids.append(&mut rows);

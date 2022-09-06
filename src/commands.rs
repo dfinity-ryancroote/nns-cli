@@ -4,11 +4,11 @@ pub mod neuron;
 
 #[derive(Subcommand)]
 pub enum Command {
-    Neuron(neuron::NeuronOpts)
+    Neuron(neuron::NeuronOpts),
 }
 
 pub fn dispatch(command: Command) {
     match command {
-        Command::Neuron(o) => neuron::dispatch(o)
+        Command::Neuron(o) => neuron::dispatch(o),
     }
 }

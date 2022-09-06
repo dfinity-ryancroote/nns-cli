@@ -5,7 +5,7 @@ use clap::{Parser, Subcommand};
 #[derive(Parser)]
 pub struct NeuronOpts {
     #[clap(subcommand)]
-    pub subcommand: Command
+    pub subcommand: Command,
 }
 
 #[derive(Subcommand)]
@@ -15,6 +15,6 @@ pub enum Command {
 
 pub fn dispatch(opts: NeuronOpts) {
     match opts.subcommand {
-        Command::List(o) => list::exec(o)
+        Command::List(o) => list::exec(o),
     }
 }

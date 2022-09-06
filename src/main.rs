@@ -1,3 +1,4 @@
+#![allow(non_camel_case_types, clippy::large_enum_variant)]
 mod cli;
 mod commands;
 mod common;

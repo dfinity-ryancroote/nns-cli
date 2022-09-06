@@ -28,7 +28,6 @@ jobs:
         run: |
           rustup update ${{ matrix.rust }} --no-self-update
           rustup default ${{ matrix.rust }}
-          rustup target add wasm32-unknown-unknown
           rustup component add clippy
 
       - uses: actions-rs/clippy-check@v1
@@ -39,7 +38,7 @@ jobs:
       - name: Run Tests
         shell: bash
         run: |
-          cargo test -p xrc --release --all-targets --all-features
+          cargo test --release --all-targets --all-features
         env:
           RUST_BACKTRACE: 1
 
