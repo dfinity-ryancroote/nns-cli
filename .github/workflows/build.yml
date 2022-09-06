@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  cargo-tests:
+  build-nns-cli:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -39,5 +39,5 @@ jobs:
       - name: 'Upload nns-cli module'
         uses: actions/upload-artifact@v2
         with:
-          name: NNS CLI
+          name: nns-cli-${{ runner.os }}
           path: ./target/release/nns-cli
