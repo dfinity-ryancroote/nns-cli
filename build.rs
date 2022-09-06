@@ -1,4 +1,3 @@
-use candid;
 use candid::bindings::analysis::{chase_actor, infer_rec};
 use candid::parser::typing::TypeEnv;
 use candid::pretty::*;
@@ -190,54 +189,6 @@ fn pp_defs<'a>(env: &'a TypeEnv, def_list: &'a [&'a str], recs: &'a RecPoints) -
             }
         }
     }))
-}
-
-fn pp_function<'a>(id: &'a str, func: &'a Function) -> RcDoc<'a> {
-    let name = ident(id);
-    let empty = BTreeSet::new();
-    let args = concat(
-        std::iter::once(str("&self")).chain(
-            func.args
-                .iter()
-                .enumerate()
-                .map(|(i, ty)| RcDoc::as_string(format!("arg{}: ", i)).append(pp_ty(ty, &empty))),
-        ),
-        ",",
-    );
-    let rets = enclose(
-        "(",
-        RcDoc::concat(func.rets.iter().map(|ty| pp_ty(ty, &empty).append(","))),
-        ")",
-    );
-    let sig = kwd("pub async fn")
-        .append(name)
-        .append(enclose("(", args, ")"))
-        .append(kwd(" ->"))
-        .append(enclose("CallResult<", rets, "> "));
-    let args = RcDoc::concat((0..func.args.len()).map(|i| RcDoc::text(format!("arg{},", i))));
-    let method = id.escape_debug().to_string();
-    let body = str("ic_cdk::call(self.0, \"")
-        .append(method)
-        .append("\", ")
-        .append(enclose("(", args, ")"))
-        .append(").await");
-    sig.append(enclose_space("{", body, "}"))
-}
-
-fn pp_actor<'a>(env: &'a TypeEnv, actor: &'a Type) -> RcDoc<'a> {
-    // TODO trace to service before we figure out what canister means in Rust
-    let serv = env.as_service(actor).unwrap();
-    let body = RcDoc::intersperse(
-        serv.iter().map(|(id, func)| {
-            let func = env.as_func(func).unwrap();
-            pp_function(id, func)
-        }),
-        RcDoc::hardline(),
-    );
-    RcDoc::text("struct SERVICE(candid::Principal);")
-        .append(RcDoc::hardline())
-        .append("impl SERVICE")
-        .append(enclose_space("{", body, "}"))
 }
 
 pub fn compile(env: &TypeEnv, actor: &Option<Type>) -> String {
